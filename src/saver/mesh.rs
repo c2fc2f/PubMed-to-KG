@@ -133,7 +133,7 @@ impl<'a> SaverMeSH<'a> {
             has_concept: writer!(
                 dir,
                 "HAS_CONCEPT",
-                [":START_ID(MeSH)", "isPreferred", ":END_ID(MeSH)",]
+                [":START_ID(MeSH)", "isPreferred:boolean", ":END_ID(MeSH)",]
             ),
             mapped_to: writer!(
                 dir,
