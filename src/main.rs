@@ -9,7 +9,7 @@ use clap::Parser;
 use dirs::cache_dir;
 use futures::{StreamExt, stream};
 use mesh::{
-    MeSH, descriptor::models::DescriptorRecord,
+    MeSH, descriptor::models::DescriptorRecord, error::MeSHError,
     qualifier::models::QualifierRecord,
     supplemental::models::SupplementalRecord,
 };
@@ -124,7 +124,7 @@ async fn main() -> ExitCode {
         })
         .build();
 
-    let (r1, r2, r3) = tokio::join!(
+    let join: Result<((), (), ()), MeSHError> = tokio::try_join!(
         mesh.descriptor({
             let saver = Arc::clone(&saver);
             move |desc: DescriptorRecord| {
@@ -145,11 +145,9 @@ async fn main() -> ExitCode {
         }),
     );
 
-    for result in [r1, r2, r3] {
-        if let Err(e) = result {
-            eprintln!("Error during writing of the CSV files:\n{:?}", e);
-            return ExitCode::FAILURE;
-        }
+    if let Err(e) = join {
+        eprintln!("Error during writing of the CSV files:\n{:?}", e);
+        return ExitCode::FAILURE;
     }
 
     match saver.flush() {
