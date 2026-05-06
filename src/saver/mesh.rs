@@ -32,9 +32,9 @@ pub struct SaverMeSH<'a> {
     /// CSV Writer for MeSHConcept Nodes
     mesh_concept: Writer,
 
-    /// CSV Writer for MeSHQualified Nodes
+    /// CSV Writer for MeSHDescriptorQualified Nodes
     mesh_qualifieds: Writer,
-    /// Set of the ID of saved MeSHQualified node
+    /// Set of the ID of saved MeSHDescriptorQualified node
     qualified_id: Mutex<FxHashSet<String>>,
 
     /// CSV writer for NARROWER_THAN Relation for Descriptor Node
@@ -141,7 +141,7 @@ impl<'a> SaverMeSH<'a> {
                 [
                     ":START_ID(MeSH)",
                     "descriptorIsMajorTopic:boolean",
-                    ":END_ID(MeSHQualified)"
+                    ":END_ID(MeSHDescriptorQualified)"
                 ]
             ),
         })

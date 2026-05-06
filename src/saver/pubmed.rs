@@ -17,32 +17,32 @@ use crate::{saver::Writer, writer};
 /// Struct that regroup CSV Files
 #[derive(Debug)]
 pub struct SaverPubMed {
-    /// CSV Writer for Article Nodes
+    /// CSV Writer for PubMedArticle Nodes
     articles: Writer,
 
-    /// CSV Writer for Person Nodes
+    /// CSV Writer for PubMedPerson Nodes
     persons: Writer,
     /// Set of the ID of saved person node
     person_id: Mutex<FxHashSet<String>>,
 
-    /// CSV Writer for Collective Nodes
+    /// CSV Writer for PubMedCollective Nodes
     collectives: Writer,
     /// Set of the ID of saved collective node
     collective_id: Mutex<FxHashSet<String>>,
 
-    /// CSV Writer for Journal Nodes
+    /// CSV Writer for PubMedJournal Nodes
     journals: Writer,
     /// Set of the ID of saved journal node
     journal_id: Mutex<FxHashSet<String>>,
 
-    /// CSV Writer for Keyword Nodes
+    /// CSV Writer for PubMedKeyword Nodes
     keywords: Writer,
     /// Set of the ID of saved keyword node
     keyword_id: Mutex<FxHashSet<String>>,
 
-    /// CSV Writer for MeSHQualified Nodes
+    /// CSV Writer for MeSHDescriptorQualified Nodes
     pub(crate) mesh_qualifieds: Writer,
-    /// Set of the ID of saved MeSHQualified node
+    /// Set of the ID of saved MeSHDescriptorQualified node
     pub(crate) qualified_id: Mutex<FxHashSet<String>>,
 
     /// CSV Writer for HAS_AUTHOR Relation
@@ -76,9 +76,9 @@ impl SaverPubMed {
         Ok(Self {
             articles: writer!(
                 dir,
-                "Article",
+                "PubMedArticle",
                 [
-                    "pmid:ID(Article){id-type: long}",
+                    "pmid:ID(PubMedArticle){id-type: long}",
                     "title",
                     "abstract",
                     "dateCompleted:DATE",
@@ -87,9 +87,9 @@ impl SaverPubMed {
             ),
             persons: writer!(
                 dir,
-                "Person",
+                "PubMedPerson",
                 [
-                    ":ID(Agent)",
+                    ":ID(PubMedAgent)",
                     "lastName",
                     "foreName",
                     "initials",
@@ -101,16 +101,20 @@ impl SaverPubMed {
                 35_000_000,
                 Default::default(),
             )),
-            collectives: writer!(dir, "Collective", ["name:ID(Agent)",]),
+            collectives: writer!(
+                dir,
+                "PubMedCollective",
+                ["name:ID(PubMedAgent)",]
+            ),
             collective_id: Mutex::new(FxHashSet::with_capacity_and_hasher(
                 241_000,
                 Default::default(),
             )),
             journals: writer!(
                 dir,
-                "Journal",
+                "PubMedJournal",
                 [
-                    ":ID(Journal)",
+                    ":ID(PubMedJournal)",
                     "title",
                     "country",
                     "nlmId",
@@ -124,8 +128,8 @@ impl SaverPubMed {
             )),
             keywords: writer!(
                 dir,
-                "Keyword",
-                [":ID(Keyword)", "value", "supplier",]
+                "PubMedKeyword",
+                [":ID(PubMedKeyword)", "value", "supplier",]
             ),
             keyword_id: Mutex::new(FxHashSet::with_capacity_and_hasher(
                 11_000_000,
@@ -133,8 +137,8 @@ impl SaverPubMed {
             )),
             mesh_qualifieds: writer!(
                 dir,
-                "MeSHQualified",
-                [":ID(MeSHQualified)"]
+                "MeSHDescriptorQualified",
+                [":ID(MeSHDescriptorQualified)"]
             ),
             qualified_id: Mutex::new(FxHashSet::with_capacity_and_hasher(
                 6_000_000,
@@ -143,47 +147,47 @@ impl SaverPubMed {
             has_author: writer!(
                 dir,
                 "HAS_AUTHOR",
-                [":START_ID(Article)", ":END_ID(Agent)",]
+                [":START_ID(PubMedArticle)", ":END_ID(PubMedAgent)",]
             ),
             is_part_of: writer!(
                 dir,
                 "IS_PART_OF",
-                [":START_ID(Article)", ":END_ID(Journal)",]
+                [":START_ID(PubMedArticle)", ":END_ID(PubMedJournal)",]
             ),
             has_keyword: writer!(
                 dir,
                 "HAS_KEYWORD",
-                [":START_ID(Article)", ":END_ID(Keyword)",]
+                [":START_ID(PubMedArticle)", ":END_ID(PubMedKeyword)",]
             ),
             cites: writer!(
                 dir,
                 "CITES",
-                [":START_ID(Article)", ":END_ID(Article)",]
+                [":START_ID(PubMedArticle)", ":END_ID(PubMedArticle)",]
             ),
             has_mesh: writer!(
                 dir,
                 "HAS_MESH",
                 [
-                    ":START_ID(Article)",
+                    ":START_ID(PubMedArticle)",
                     "descriptorIsMajorTopic:boolean",
                     "qualifierMajorTopics:string[]",
-                    ":END_ID(MeSHQualified)",
+                    ":END_ID(MeSHDescriptorQualified)",
                 ]
             ),
             has_supplementary_mesh: writer!(
                 dir,
                 "HAS_SUPPLEMENTARY_MESH",
-                [":START_ID(Article)", ":END_ID(MeSH)",]
+                [":START_ID(PubMedArticle)", ":END_ID(MeSH)",]
             ),
             has_descriptor: writer!(
                 dir,
                 "HAS_DESCRIPTOR",
-                [":START_ID(MeSHQualified)", ":END_ID(MeSH)",]
+                [":START_ID(MeSHDescriptorQualified)", ":END_ID(MeSH)",]
             ),
             has_qualifier: writer!(
                 dir,
                 "HAS_QUALIFIER",
-                [":START_ID(MeSHQualified)", ":END_ID(MeSH)",]
+                [":START_ID(MeSHDescriptorQualified)", ":END_ID(MeSH)",]
             ),
         })
     }

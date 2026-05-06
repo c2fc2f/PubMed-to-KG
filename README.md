@@ -89,12 +89,12 @@ All output files are written to the directory specified by `--output`. Node file
 
 | File | Label | Description |
 |---|---|---|
-| `Article.csv` | `Article` | PubMed articles (PMID, title, …) |
-| `Person.csv` | `Person` (Agent) | Individual authors |
-| `Collective.csv` | `Collective` (Agent) | Corporate or collective authors |
-| `Journal.csv` | `Journal` | Journals in which articles were published |
-| `Keyword.csv` | `Keyword` | Author or MeSH-supplied keywords |
-| `MeSHQualified.csv` | `MeSHQualified` | Junction nodes linking a MeSH heading to its qualifier on a given article |
+| `PubMedArticle.csv` | `PubMedArticle` (PubMed) | PubMed articles (PMID, title, …) |
+| `PubMedPerson.csv` | `PubMedPerson` (PubMed, PubMedAgent) | Individual authors |
+| `PubMedCollective.csv` | `PubMedCollective` (PubMed, PubMedAgent) | Corporate or collective authors |
+| `PubMedJournal.csv` | `PubMedJournal` (PubMed) | Journals in which articles were published |
+| `PubMedKeyword.csv` | `PubMedKeyword` (PubMed) | Author or MeSH-supplied keywords |
+| `MeSHDescriptorQualified.csv` | `MeSHDescriptorQualified` (MeSH) | Junction nodes linking a MeSH heading to its qualifier on a given article |
 | `MeSHDescriptor.csv` | `MeSHDescriptor` (MeSH) | MeSH descriptor records |
 | `MeSHQualifier.csv` | `MeSHQualifier` (MeSH) | MeSH qualifier records |
 | `MeSHSupplemental.csv` | `MeSHSupplemental` (MeSH) | MeSH supplemental concept records |
@@ -104,14 +104,14 @@ All output files are written to the directory specified by `--output`. Node file
 
 | File | Type | From → To | Description |
 |---|---|---|---|
-| `HAS_AUTHOR.csv` | `HAS_AUTHOR` | Article → Agent | Links an article to its authors |
-| `IS_PART_OF.csv` | `IS_PART_OF` | Article → Journal | Links an article to its journal |
-| `HAS_KEYWORD.csv` | `HAS_KEYWORD` | Article → Keyword | Links an article to its keywords |
-| `CITES.csv` | `CITES` | Article → Article | Citation links between articles |
-| `HAS_MESH.csv` | `HAS_MESH` | Article → MeSHQualified | Links an article to its MeSH headings |
-| `HAS_SUPPLEMENTARY_MESH.csv` | `HAS_SUPPLEMENTARY_MESH` | Article → MeSHSupplemental | Links an article to supplemental MeSH concepts |
-| `HAS_DESCRIPTOR.csv` | `HAS_DESCRIPTOR` | MeSHQualified → MeSHDescriptor | Links a qualified heading to its descriptor |
-| `HAS_QUALIFIER.csv` | `HAS_QUALIFIER` | MeSHQualified → MeSHQualifier | Links a qualified heading to its qualifier |
+| `HAS_AUTHOR.csv` | `HAS_AUTHOR` | PubMedArticle → PubMedAgent | Links an article to its authors |
+| `IS_PART_OF.csv` | `IS_PART_OF` | PubMedArticle → PubMedJournal | Links an article to its journal |
+| `HAS_KEYWORD.csv` | `HAS_KEYWORD` | PubMedArticle → PubMedKeyword | Links an article to its keywords |
+| `CITES.csv` | `CITES` | PubMedArticle → PubMedArticle | Citation links between articles |
+| `HAS_MESH.csv` | `HAS_MESH` | PubMedArticle → MeSHDescriptorQualified | Links an article to its MeSH headings |
+| `HAS_SUPPLEMENTARY_MESH.csv` | `HAS_SUPPLEMENTARY_MESH` | PubMedArticle → MeSHSupplemental | Links an article to supplemental MeSH concepts |
+| `HAS_DESCRIPTOR.csv` | `HAS_DESCRIPTOR` | MeSHDescriptorQualified → MeSHDescriptor | Links a qualified heading to its descriptor |
+| `HAS_QUALIFIER.csv` | `HAS_QUALIFIER` | MeSHDescriptorQualified → MeSHQualifier | Links a qualified heading to its qualifier |
 | `NARROWER_THAN.csv` | `NARROWER_THAN` | MeSH → MeSH | Hierarchical narrower relation in MeSH tree |
 | `BROADER_THAN.csv` | `BROADER_THAN` | MeSH → MeSH | Hierarchical broader relation in MeSH tree |
 | `RELATED_TO.csv` | `RELATED_TO` | MeSH → MeSH | Related concepts in the MeSH vocabulary |
@@ -132,16 +132,16 @@ sudo JDK_JAVA_OPTIONS="--add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=ja
     --multiline-fields=true \
     --overwrite-destination \
     --skip-bad-relationships \
-    --nodes=Article=./Article.csv \
-    --nodes=Collective:Agent=./Collective.csv \
-    --nodes=Person:Agent=./Person.csv \
-    --nodes=Journal=./Journal.csv \
-    --nodes=Keyword=./Keyword.csv \
-    --nodes=MeSHDescriptor:MeSH=./MeSHDescriptor.csv \
-    --nodes=MeSHQualifier:MeSH=./MeSHQualifier.csv \
-    --nodes=MeSHSupplemental:MeSH=./MeSHSupplemental.csv \
-    --nodes=MeSHConcept:MeSH=./MeSHConcept.csv \
-    --nodes=MeSHQualified=./MeSHQualified.csv \
+    --nodes=PubMed:PubMedArticle=./PubMedArticle.csv \
+    --nodes=PubMed:PubMedAgent:PubMedCollective=./PubMedCollective.csv \
+    --nodes=PubMed:PubMedAgent:PubMedPerson=./PubMedPerson.csv \
+    --nodes=PubMed:PubMedJournal=./PubMedJournal.csv \
+    --nodes=PubMed:PubMedKeyword=./PubMedKeyword.csv \
+    --nodes=MeSH:MeSHDescriptor=./MeSHDescriptor.csv \
+    --nodes=MeSH:MeSHQQualifier=./MeSHQualifier.csv \
+    --nodes=MeSH:MeSHSupplemental=./MeSHSupplemental.csv \
+    --nodes=MeSH:MeSHConcept=./MeSHConcept.csv \
+    --nodes=MeSH:MeSHDescriptorQualified=./MeSHDescriptorQualified.csv \
     --relationships=HAS_AUTHOR=./HAS_AUTHOR.csv \
     --relationships=IS_PART_OF=./IS_PART_OF.csv \
     --relationships=HAS_KEYWORD=./HAS_KEYWORD.csv \
