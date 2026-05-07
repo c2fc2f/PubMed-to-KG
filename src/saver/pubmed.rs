@@ -298,6 +298,10 @@ impl SaverPubMed {
         owner: &KeywordListOwner,
         pmid: &str,
     ) -> std::io::Result<()> {
+        if keyword.content.is_empty() {
+            return Ok(())
+        }
+
         let keyword_id: String =
             format!("{}-{}", owner.as_str(), keyword.content);
 
